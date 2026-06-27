@@ -9,6 +9,7 @@ const {
 
 const {
   registerValidation,
+  loginValidation,
   validate,
 } = require("../validators/validationRules");
 
@@ -19,6 +20,11 @@ router.post(
   registerUser
 );
 
-router.post("/login", loginUser);
+router.post(
+  "/login",
+  loginValidation,
+  validate,
+  loginUser
+);
 
 module.exports = router;

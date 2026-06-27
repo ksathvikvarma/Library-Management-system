@@ -21,6 +21,16 @@ const registerValidation = [
     .withMessage("Role must be either member or librarian"),
 ];
 
+const loginValidation = [
+  body("email")
+    .isEmail()
+    .withMessage("Please provide a valid email"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required"),
+];
+
 // Validation Result Middleware
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -37,5 +47,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   registerValidation,
+  loginValidation,
   validate,
 };
