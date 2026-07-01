@@ -50,6 +50,48 @@ const borrowBook = async (req, res) => {
     }
 };
 
+const returnBook = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { bookId } = req.params;
+
+        const borrow = await Borrow.findOne({
+            user: userId,
+            book: bookId,
+            returned: false,
+        });
+
+        if (!borrow) {
+            return res.status(404).json({
+                success: false,
+                message: "Borrow record not found",
+            });
+        }
+
+        borrow.returned = true;
+        await borrow.save();
+
+        const book = await Book.findById(bookId);
+
+        if (book) {
+            book.availableCopies += 1;
+            await book.save();
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Book returned successfully",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
     borrowBook,
+    returnBook,
 };
